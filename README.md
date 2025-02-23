@@ -1,5 +1,5 @@
 # IO_STEPFileReader  
-## parsing, tokenizing, reading and writing files in step format aka ISO 10303-21  
+## Parsing, tokenizing, reading and writing files in ISO 10303-21 aka step  
 
 [![GitHub](https://img.shields.io/github/license/OlimilO1402/IO_STEPFileReader?style=plastic)](https://github.com/OlimilO1402/IO_STEPFileReader/blob/master/LICENSE) 
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/OlimilO1402/IO_STEPFileReader?style=plastic)](https://github.com/OlimilO1402/IO_STEPFileReader/releases/latest)
@@ -26,13 +26,12 @@ End Function
 ```
 Some Links:  
 ===========
-[Wikipedia ISO 10303-21](https://en.wikipedia.org/wiki/ISO_10303-21) 
-[Wikipedia Industry Foundation Classes](https://en.wikipedia.org/wiki/Industry_Foundation_Classes)
-  
-[Youtube channel Intermation](https://www.youtube.com/@Intermation)
-[Intermation: Introduction to State Machines: Designing a Simple Traffic Signal](https://www.youtube.com/watch?v=gv5fQrD8XUo)
-[Intermation: Introduction to Finite State Machine Theory](https://www.youtube.com/watch?v=05zp5vbYXSQ)
-[Intermation: Converting Non-Deterministic Finite Automata to Deterministic Finite Automata](https://www.youtube.com/watch?v=wJk82yQhxms)
-[Intermation: Finite State Automata - From Theory to Code](https://www.youtube.com/watch?v=IhUqXgVl6jo)
+[Wikipedia ISO 10303-21](https://en.wikipedia.org/wiki/ISO_10303-21)  
+[Wikipedia Industry Foundation Classes](https://en.wikipedia.org/wiki/Industry_Foundation_Classes)  
+[Youtube channel Intermation](https://www.youtube.com/@Intermation)  
+[Intermation: Introduction to State Machines: Designing a Simple Traffic Signal](https://www.youtube.com/watch?v=gv5fQrD8XUo)  
+[Intermation: Introduction to Finite State Machine Theory](https://www.youtube.com/watch?v=05zp5vbYXSQ)  
+[Intermation: Converting Non-Deterministic Finite Automata to Deterministic Finite Automata](https://www.youtube.com/watch?v=wJk82yQhxms)  
+[Intermation: Finite State Automata - From Theory to Code](https://www.youtube.com/watch?v=IhUqXgVl6jo)  
   
 ![Picture Image](Resources/Picture.png "Picture Image")
