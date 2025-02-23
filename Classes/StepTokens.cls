@@ -12,8 +12,8 @@ Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
-
-Private m_List As List
+'StepTokens could also be a StepToken
+Private m_List As List 'Of StepToken
 
 Private Sub Class_Initialize()
     Set m_List = MNew.List(vbObject)

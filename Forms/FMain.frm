@@ -18,6 +18,14 @@ Begin VB.Form FMain
    ScaleHeight     =   8295
    ScaleWidth      =   14370
    StartUpPosition =   3  'Windows-Standard
+   Begin VB.CommandButton Command3 
+      Caption         =   "Command3"
+      Height          =   495
+      Left            =   11280
+      TabIndex        =   4
+      Top             =   120
+      Width           =   1695
+   End
    Begin VB.CommandButton Command2 
       Caption         =   "Command2"
       Height          =   495
@@ -36,13 +44,13 @@ Begin VB.Form FMain
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Height          =   1575
+      Height          =   3255
       Left            =   120
       MultiLine       =   -1  'True
       ScrollBars      =   3  'Beides
       TabIndex        =   2
-      Top             =   2400
-      Width           =   10455
+      Top             =   4080
+      Width           =   12975
    End
    Begin VB.TextBox Text1 
       BeginProperty Font 
@@ -54,13 +62,13 @@ Begin VB.Form FMain
          Italic          =   0   'False
          Strikethrough   =   0   'False
       EndProperty
-      Height          =   1575
+      Height          =   3255
       Left            =   120
       MultiLine       =   -1  'True
       ScrollBars      =   3  'Beides
       TabIndex        =   1
       Top             =   720
-      Width           =   10455
+      Width           =   12975
    End
    Begin VB.CommandButton Command1 
       Caption         =   "Command1"
@@ -88,16 +96,18 @@ Private Sub Command1_Click()
 '    End If
 '    Set m_stp = MNew.StepReader(m_PFN)
 '    Text1.Text = m_stp.ToStr
+    
+    
     Dim obj As StepObject
     Dim ser As StepSerializer
-    Dim str As StreamStr
+    Dim Str As StreamStr
     Dim Reader As StepReader
     
     Set obj = MNew.StepObject(1, "COLOR")
-    obj.Arguments.Add MNew.StepToken(tkt_NumericInt, 1)
-    obj.Arguments.Add MNew.StepToken(tkt_NumericInt, 0)
-    obj.Arguments.Add MNew.StepToken(tkt_NumericInt, 0)
-    obj.Arguments.Add MNew.StepToken(tkt_NumericInt, 0)
+    obj.Tokens.Add MNew.StepToken(tkt_NumericInt, 1)
+    obj.Tokens.Add MNew.StepToken(tkt_NumericInt, 0)
+    obj.Tokens.Add MNew.StepToken(tkt_NumericInt, 0)
+    obj.Tokens.Add MNew.StepToken(tkt_NumericInt, 0)
     
     Set ser = New StepSerializer
     obj.Serialize ser
@@ -106,8 +116,10 @@ Private Sub Command1_Click()
 End Sub
 
 Private Sub Command2_Click()
-    Set str = MNew.StreamStr(Text1.Text)
-    Set Reader = MNew.StepReader(str)
+    Dim Str As StreamStr: Set Str = MNew.StreamStr(Text1.Text)
+    Dim Reader As StepReader
+    
+    Set Reader = MNew.StepReader(Str)
     
     Set obj = Reader.NextStepObject
     obj.Serialize ser
@@ -115,3 +127,33 @@ Private Sub Command2_Click()
     
 End Sub
 
+Private Sub Command3_Click()
+    
+    Dim sth As StepHeader:    Set sth = MNew.StepHeader("Dateibeschreibung", "FImpl 2.1", "C:\test.ifc", "", "OlimilO1402", "MBO-Ing.com")
+    sth.FileSchema = "Icx03"
+    Dim std As StepData:      Set std = New StepData
+    Dim sdoc As StepDocument: Set sdoc = MNew.StepDocument(sth, std)
+    With std.Add(MNew.StepObject(0, "ICXCOLOR"))
+        .Tokens.Add MNew.StepToken(EStepTokenType.tkt_NumericInt, 1)
+        .Tokens.Add MNew.StepToken(EStepTokenType.tkt_NumericInt, 0)
+        .Tokens.Add MNew.StepToken(EStepTokenType.tkt_NumericInt, 0)
+        .Tokens.Add MNew.StepToken(EStepTokenType.tkt_NumericInt, 0)
+    End With
+    With std.Add(MNew.StepObject(0, "ICXPOINT"))
+        .Tokens.Add MNew.StepToken(EStepTokenType.tkt_NumericFlt, 0#)
+        .Tokens.Add MNew.StepToken(EStepTokenType.tkt_NumericFlt, 0#)
+        .Tokens.Add MNew.StepToken(EStepTokenType.tkt_NumericFlt, 0#)
+    End With
+    With std.Add(MNew.StepObject(0, "ICXPOINT"))
+        .Tokens.Add MNew.StepToken(EStepTokenType.tkt_NumericFlt, 1#)
+        .Tokens.Add MNew.StepToken(EStepTokenType.tkt_NumericFlt, 0#)
+        .Tokens.Add MNew.StepToken(EStepTokenType.tkt_NumericFlt, 0#)
+    End With
+    
+    
+    
+    
+    Dim ser As StepSerializer: Set ser = New StepSerializer
+    sdoc.Serialize ser
+    Text2.Text = ser.ToStr
+End Sub

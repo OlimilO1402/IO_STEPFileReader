@@ -46,6 +46,12 @@ Private Enum StepStates
     sts_ListSeparator            ' ","
     sts_CloseBracket             ' ")"
     sts_Semicolon                ' ";"
+    
+    sts_CommentStart0            ' "/"
+    sts_CommentStart1            ' "/*"
+    sts_CommentAnyString         ' "/* blablabla"
+    sts_CommentEnd0              ' "/* blablabla*"
+    sts_CommentEnd1              ' "/* blablabla */"
 End Enum
 Private m_Str As StreamStr
 
@@ -182,7 +188,8 @@ Public Function NextToken() As StepToken
         Case "("
             Select Case q0
             Case StepStates.sts_IdentifierClass:                  Set NextToken = MNew.StepToken(EStepTokenType.tkt_Identifier, m_Str.ExtractFromTo(i0, m_Str.Index - 1)): Exit Function
-            Case sts_String0:                                     q1 = StepStates.sts_String0               'bei String0 alles durchlassen
+            Case StepStates.sts_String0:                          q1 = StepStates.sts_String0               'bei String0 alles durchlassen
+            Case StepStates.sts_CommentAnyString:                 q1 = StepStates.sts_CommentAnyString      'bei Comment alles durchlassen
             Case Else:                                            q1 = StepStates.sts_Error
             End Select
             ': Set NextToken = MNew.StepToken(EStepTokenType.tkt_OpenBracket, c0)
@@ -192,19 +199,38 @@ Public Function NextToken() As StepToken
         Case ";"
             Select Case q0
             Case sts_String0:                                     q1 = StepStates.sts_String0               'bei String0 alles durchlassen
+            Case StepStates.sts_CommentAnyString:                 q1 = StepStates.sts_CommentAnyString      'bei Comment alles durchlassen
             Case Else:                                            q1 = sts_DataInitial:       i0 = 1
             'this is the end of the class definition so reset
-                'should we spit out a token for that?
+            'should we spit out a token for that?
             ': Set NextToken = MNew.StepToken(EStepTokenType.tkt_Semicolon, c0)
             End Select
         Case " ", vbCr, vbLf, vbCrLf
             Select Case q0
-            
-            End Select
-        Case Else 'any other character could be contained in a string
-            Select Case q0
             Case sts_String0:                                     q1 = StepStates.sts_String0               'bei String0 alles durchlassen
-            Case Else:                                            q1 = StepStates.sts_Error
+            Case StepStates.sts_CommentAnyString:                 q1 = StepStates.sts_CommentAnyString      'bei Comment alles durchlassen
+            Case Else:                                            q1 = sts_DataInitial:       i0 = 1
+            End Select
+        Case "/"
+            Select Case q0
+            Case StepStates.sts_Initial:                          q1 = StepStates.sts_CommentStart0
+            Case StepStates.sts_CommentEnd0:                      q1 = StepStates.sts_CommentEnd1
+            Case StepStates.sts_String0:                          q1 = StepStates.sts_String0               'bei String0 alles durchlassen
+            Case StepStates.sts_CommentAnyString:                 q1 = StepStates.sts_CommentAnyString      'bei Comment alles durchlassen
+            Case Else:                                            q1 = sts_DataInitial:       i0 = 1
+            End Select
+        Case "*"
+            Select Case q0
+            Case StepStates.sts_CommentStart0:                    q1 = StepStates.sts_CommentStart1
+            Case StepStates.sts_String0:                          q1 = StepStates.sts_String0               'bei String0 alles durchlassen
+            Case StepStates.sts_CommentAnyString:                 q1 = StepStates.sts_CommentAnyString      'bei Comment alles durchlassen
+            Case Else:                                            q1 = sts_DataInitial:       i0 = 1
+            End Select
+        Case Else 'any other character could be contained in a string or a comment
+            Select Case q0
+            Case StepStates.sts_String0:                          q1 = StepStates.sts_String0               'bei String0 alles durchlassen
+            Case StepStates.sts_CommentAnyString:                 q1 = StepStates.sts_CommentAnyString
+            Case Else:                                            q1 = StepStates.sts_Error:  i0 = 1
             End Select
         End Select
         q0 = q1

@@ -14,7 +14,7 @@ Attribute VB_Exposed = False
 Option Explicit
 
 Public Hash As Long
-Public ClassName As String
+Public Name As String
 Private m_Tokens As StepTokens
 
 Private Sub Class_Initialize()
@@ -22,7 +22,7 @@ Private Sub Class_Initialize()
 End Sub
 
 Friend Sub New_(aHash As Long, aClassName As String)
-    Me.Hash = aHash: Me.ClassName = aClassName
+    Me.Hash = aHash: Me.Name = aClassName
 End Sub
 
 ''copy to MNew:
@@ -30,8 +30,8 @@ End Sub
 '    Set StepObject = New StepObject: StepObject.New_ aHash, aClassName
 'End Function
 
-Public Property Get Arguments() As StepTokens
-    Set Arguments = m_Tokens
+Public Property Get Tokens() As StepTokens
+    Set Tokens = m_Tokens
 End Property
 
 Public Sub Serialize(Serializer As StepSerializer)

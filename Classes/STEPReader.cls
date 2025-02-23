@@ -12,7 +12,7 @@ Attribute VB_Creatable = True
 Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
-Private m_Header    As StepHeader
+'Private m_Header    As StepHeader
 Private m_Stack     As Stack
 'Private m_Stream    As StreamStr
 Private m_Tokenizer As StepTokenizer
@@ -26,93 +26,76 @@ Friend Sub New_(aStream As StreamStr)
     Set m_Tokenizer = MNew.StepTokenizer(aStream)
 End Sub
 
-Public Property Get StepHeader() As StepHeader
-    If m_Header Is Nothing Then Set m_Header = ReadHeader
-    Set StepHeader = m_Header
-End Property
+Public Function IsStepDocument() As Boolean
+    Dim tok As StepToken: Set tok = m_Tokenizer.NextToken
+    If tok.Value = "ISO-10303-21" Then IsStepDocument = True
+End Function
 
-
-'Public ISO1030321      As String
-''FILE_DESCRIPTION (
-''                     /* description */          ('A minimal AP214 example with a single part'),
-''                     /* implementation_level */ '2;1'
-''                 );
-'Public FileDescription As String
-'Public FileImplLevel   As String
-'
-''FILE_NAME        (
-''                     /* name */                 'demo',
-''                     /* time_stamp */           '2003-12-27T11:57:53',
-''                     /* author */               ('Lothar Klein'),
-''                     /* organization */         ('LKSoft'),
-''                     /* preprocessor_version */ ' ',
-''                     /* originating_system */   'IDA-STEP',
-''                     /* authorization */        ' '
-''                 );
-'Public FileName        As String
-''Public TimeStamp       As String
-'Private m_TimeStamp    As Date
-'Public Author          As String
-'Public Organization    As String
-'Public PreProcVersion  As String
-'Public OriginSystem    As String
-'Public Authorization   As String
-'
-''FILE_SCHEMA      (
-''                                                ('AUTOMOTIVE_DESIGN { 1 0 10303 214 2 1 1}')
-''                 );
-'Public FileSchema      As String
-
-
+''HEADER;
+''FILE_DESCRIPTION(('FileDescription'),'1;1');
+''FILE_NAME('filename.step','2003-12-27T11:57:53',('Lothar Klein'),('LKSoft'),'','IDA-STEP','');
+''FILE_SCHEMA(('AUTOMOTIVE_DESIGN { 1 0 10303 214 2 1 1}'));
+''ENDSEC;
+'m_s = m_s & "HEADER;" & vbCrLf
+'With obj
+'    m_s = m_s & "FILE_DESCRIPTION(('" & IIf(Len(.FileDescription), .FileDescription, "FileDescription") & "'),'" & IIf(Len(.FileImplLevel), .FileImplLevel, "1;1") & "');" & vbCrLf
+'    m_s = m_s & "FILE_NAME('" & IIf(Len(.FileName), .FileName, "filename.step") & "','" & .TimeStampStr & "',('" & .Author & "'),('" & .Organization & ")','" & .PreProcVersion & "','" & .OriginSystem & "','" & .Authorization & "');" & vbCrLf
+'    m_s = m_s & "FILE_SCHEMA(('" & .FileSchema & "'));" & vbCrLf
+'End With
+'m_s = m_s & "ENDSEC;" & vbCrLf
 
 
 Private Function ReadHeader() As StepHeader
     Dim bReadon As Boolean
     Dim tok As StepToken
-    Do Until m_Tokenizer.IsEOF
+    
+    Set tok = m_Tokenizer.NextToken
+    If Not tok Is Nothing Then If tok.TokenType = tkt_Identifier Then bReadon = UCase(tok.Value) = "HEADER"
+    If Not bReadon Then Exit Function
+    
         Set tok = m_Tokenizer.NextToken
-        If Not tok Is Nothing Then
-            If tok.TokenType = tkt_Identifier Then bReadon = tok.Value = "ISO-10303-21"
-            If Not bReadon Then Exit Function
-        End If
+        If Not tok Is Nothing Then If tok.TokenType = tkt_Identifier Then bReadon = UCase(tok.Value) = "FILE_DESCRIPTION"
+        If Not bReadon Then Exit Function
+        
         Set tok = m_Tokenizer.NextToken
-        If Not tok Is Nothing Then
-            If tok.TokenType = tkt_Identifier Then bReadon = tok.Value = "FILE_DESCRIPTION"
-            If Not bReadon Then Exit Function
-        End If
-    Loop
+        If Not tok Is Nothing Then If tok.TokenType = tkt_Identifier Then bReadon = UCase(tok.Value) = "FILE_DESCRIPTION"
+        If Not bReadon Then Exit Function
 
-    'Set ReadHeader = New StepHeader
-    With ReadHeader
-        .FileDescription
-        .FileImplLevel
-        .FileName
-        .TimeStamp
-        .Author
-        .Organization
-        .PreProcVersion
-        .OriginSystem
-        .Authorization
-        
-'FILE_SCHEMA
-        .FileSchema
-        
-        .FileDescription
-        .FileImplLevel
-        
-        .FileName
-        .TimeStamp
-        .Author
-        .Organization
-        .PreProcVersion
-        .OriginSystem
-        .Authorization
-        .FileSchema
-    End With
+
+'    'Set ReadHeader = New StepHeader
+'    With ReadHeader
+'        .FileDescription
+'        .FileImplLevel
+'        .FileName
+'        .TimeStamp
+'        .Author
+'        .Organization
+'        .PreProcVersion
+'        .OriginSystem
+'        .Authorization
+'
+''FILE_SCHEMA
+'        .FileSchema
+'
+'        .FileDescription
+'        .FileImplLevel
+'
+'        .FileName
+'        .TimeStamp
+'        .Author
+'        .Organization
+'        .PreProcVersion
+'        .OriginSystem
+'        .Authorization
+'        .FileSchema
+'    End With
 End Function
 
 Public Function NextStepObject() As StepObject
-    Do Until m_Tokenizer.NextToken Is Nothing
+    Dim tok As StepToken
+    Do Until m_Tokenizer.IsEOF
+        Set tok = m_Tokenizer.NextToken
+        
         
     Loop
 End Function

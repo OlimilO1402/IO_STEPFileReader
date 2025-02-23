@@ -1,0 +1,12 @@
+ISO-10303-21;
+HEADER;
+FILE_DESCRIPTION(('Dateibeschreibung'),'FImpl 2.1');
+FILE_NAME('C:\test.ifc','2025-02-23T23:06:44',('OlimilO1402'),('MBO-Ing.com'),'','','');
+FILE_SCHEMA(('Icx03'));
+ENDSEC;
+DATA;
+#1=ICXCOLOR(1,0,0,0);
+#2=ICXPOINT(0,0,0);
+#3=ICXPOINT(1,0,0);
+ENDSEC;
+END-ISO-10303-21;

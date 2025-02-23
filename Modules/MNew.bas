@@ -16,6 +16,14 @@ Public Function PathFileName(ByVal aPathFileName As String, _
     Set PathFileName = New PathFileName: PathFileName.New_ aPathFileName, aFileName, aExt
 End Function
 
+Public Function StepDocument(aHeader As StepHeader, aData As StepData) As StepDocument
+    Set StepDocument = New StepDocument: StepDocument.New_ aHeader, aData
+End Function
+
+Public Function StepHeader(ByVal FDescr As String, ByVal FImpl As String, ByVal PFNam As String, DateTimeStamp, ByVal Auth As String, ByVal Organis As String) As StepHeader
+    Set StepHeader = New StepHeader: StepHeader.New_ FDescr, FImpl, PFNam, DateTimeStamp, Auth, Organis
+End Function
+
 Public Function StepObject(ByVal aHash As Long, ByVal aClassName As String) As StepObject
     Set StepObject = New StepObject: StepObject.New_ aHash, aClassName
 End Function
@@ -39,7 +47,29 @@ Public Function StepTokenizer(aStream As StreamStr) As StepTokenizer
     Set StepTokenizer = New StepTokenizer: StepTokenizer.New_ aStream
 End Function
 
-Public Function StepHeader(ByVal FDescr As String, ByVal FImpl As String, ByVal PFNam As String, ByVal Auth As String, ByVal Organis As String) As StepHeader
-    Set StepHeader = New StepHeader: StepHeader.New_ FDescr, FImpl, PFNam, Auth, Organis
-End Function
-
+'Class-hierarchiy
+'
+'Class StepDocument
+'    Header As StepHeader
+'        Class StepHeader
+'
+'    Datas  As Collection Of StepData
+'
+'    Class StepData
+'        Objects As List Of StepObject
+'            Class StepObject
+'                Hash As Long
+'                Name As String
+'                Tokens As StepTokens
+'                    Class StepTokens
+'                        Tokens As List Of StepToken
+'                            Class StepToken
+'                                TokenType As EStepTokenType
+'                                Value     As Variant
+'    Class StepReader
+'        Tokenizer As StepTokenizer
+'            Class StepTokenizer
+'
+'    Class StepSerializer
+'        Str As StreamStr
+'            Class StreamStr

@@ -22,11 +22,11 @@ Public Enum EStepTokenType
     tkt_EmptyOrDefault     ' "$"
     tkt_Boolean            ' "."("F"|"T")"."
     tkt_EnumIdentifier     ' "."EnumConstIdentifier"."
-    'tkt_nTupelList         ' "("(StpToken?(","StpToken)*")"
+    tkt_nTupelList         ' "("(StpToken?(","StpToken)*")"
     tkt_BracketOpen        ' "("
     tkt_BracketClose       ' ")"
+    tkt_Comment            ' /* any text as comment */
 End Enum
-
 
 Public TokenType As EStepTokenType
 Public Value     As Variant       '
@@ -35,7 +35,6 @@ Friend Sub New_(aTokenType As EStepTokenType, aValue)
     TokenType = aTokenType
     If VarType(aValue) = vbObject Then Set Value = aValue Else Value = aValue
 End Sub
-
 ''copy to MNew:
 'Public Function StepToken(aTokenType As EStepTokenType, aValue) As StepToken
 '    Set StepToken = New StepToken: StepToken.New_ aTokenType, aValue
