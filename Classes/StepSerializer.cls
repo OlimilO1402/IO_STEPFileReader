@@ -19,9 +19,9 @@ Private Sub Class_Initialize()
     m_s = "ISO-10303-21;" & vbCrLf
 End Sub
 
-Public Sub SerializeStepDocument(obj As StepDocument)
+Public Sub SerializeStepDocument(Obj As StepDocument)
     m_s = "ISO-10303-21;" & vbCrLf
-    With obj
+    With Obj
         .Header.Serialize Me
         Dim i As Long, ObjData As StepData
         For i = 0 To .Count - 1
@@ -33,14 +33,14 @@ Public Sub SerializeStepDocument(obj As StepDocument)
     m_IsEndAdded = True
 End Sub
 
-Public Sub SerializeStepHeader(obj As StepHeader)
+Public Sub SerializeStepHeader(Obj As StepHeader)
     'HEADER;
     'FILE_DESCRIPTION(('FileDescription'),'1;1');
     'FILE_NAME('filename.step','2003-12-27T11:57:53',('Lothar Klein'),('LKSoft'),'','IDA-STEP','');
     'FILE_SCHEMA(('AUTOMOTIVE_DESIGN { 1 0 10303 214 2 1 1}'));
     'ENDSEC;
     m_s = m_s & "HEADER;" & vbCrLf
-    With obj
+    With Obj
         m_s = m_s & "FILE_DESCRIPTION(('" & IIf(Len(.FileDescription), .FileDescription, "FileDescription") & "'),'" & IIf(Len(.FileImplLevel), .FileImplLevel, "1;1") & "');" & vbCrLf
         m_s = m_s & "FILE_NAME('" & IIf(Len(.FileName), .FileName, "filename.step") & "','" & .TimeStampStr & "',('" & .Author & "'),('" & .Organization & "'),'" & .PreProcVersion & "','" & .OriginSystem & "','" & .Authorization & "');" & vbCrLf
         m_s = m_s & "FILE_SCHEMA(('" & .FileSchema & "'));" & vbCrLf
@@ -48,9 +48,9 @@ Public Sub SerializeStepHeader(obj As StepHeader)
     m_s = m_s & "ENDSEC;" & vbCrLf
 End Sub
 
-Public Sub SerializeStepData(obj As StepData)
+Public Sub SerializeStepData(Obj As StepData)
     m_s = m_s & "DATA;" & vbCrLf
-    With obj
+    With Obj
         Dim i As Long, StepObj As StepObject
         For i = 0 To .Count - 1
             Set StepObj = .Item(i)
@@ -60,17 +60,17 @@ Public Sub SerializeStepData(obj As StepData)
     m_s = m_s & "ENDSEC;" & vbCrLf
 End Sub
 
-Public Sub SerializeStepObject(obj As StepObject)
-    With obj
+Public Sub SerializeStepObject(Obj As StepObject)
+    With Obj
         m_s = m_s & "#" & .Hash & "=" & .Name ' & "("
         .Tokens.Serialize Me
     End With
     m_s = m_s & ";" & vbCrLf
 End Sub
 
-Public Sub SerializeStepTokens(obj As StepTokens)
+Public Sub SerializeNTupel(Obj As nTupel)
     m_s = m_s & "("
-    With obj
+    With Obj
         Dim tok As StepToken
         Dim i As Long, u As Long: u = .Count - 1
         For i = 0 To u
@@ -81,9 +81,22 @@ Public Sub SerializeStepTokens(obj As StepTokens)
     m_s = m_s & ")"
 End Sub
 
-Public Sub SerializeStepToken(obj As StepToken)
+Public Sub SerializeStepTokens(Obj As StepTokens)
+    m_s = m_s & "("
+    With Obj
+        Dim tok As StepToken
+        Dim i As Long, u As Long: u = .Count - 1
+        For i = 0 To u
+            Set tok = .Item(i): tok.Serialize Me
+            If i < u Then m_s = m_s & ","
+        Next
+    End With
+    m_s = m_s & ")"
+End Sub
+
+Public Sub SerializeStepToken(Obj As StepToken)
     Dim stks As StepTokens
-    With obj
+    With Obj
         Select Case .TokenType
         Case EStepTokenType.tkt_Boolean:            m_s = m_s & "." & IIf(.Value, "T", "F") & "."
         Case EStepTokenType.tkt_Identifier:         m_s = m_s & "#" & CStr(CLng(.Value))
@@ -91,7 +104,7 @@ Public Sub SerializeStepToken(obj As StepToken)
         Case EStepTokenType.tkt_EnumIdentifier:     m_s = m_s & "." & CStr(.Value) & "."
         Case EStepTokenType.tkt_nTupelList:         Set stks = .Value
                                                     If Not stks Is Nothing Then If stks.Count = 0 Then m_s = m_s & "$" Else stks.Serialize Me
-        Case EStepTokenType.tkt_NumericFlt:         m_s = m_s & Trim(Str(Val(.Value)))
+        Case EStepTokenType.tkt_NumericFlt:         m_s = m_s & Trim(str(Val(.Value)))
         
         Case EStepTokenType.tkt_NumericInt:         m_s = m_s & CStr(CLng(.Value))
         Case EStepTokenType.tkt_ObjectHash:         m_s = m_s & "#" & CStr(CLng(.Value))

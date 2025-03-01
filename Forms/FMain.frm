@@ -98,60 +98,92 @@ Private Sub Command1_Click()
 '    Text1.Text = m_stp.ToStr
     
     
-    Dim obj As StepObject
+    Dim Obj As StepObject
     Dim ser As StepSerializer
-    Dim Str As StreamStr
+    Dim str As StreamStr
     Dim Reader As StepReader
     
-    Set obj = MNew.StepObject(1, "COLOR")
-    obj.Tokens.Add MNew.StepToken(tkt_NumericInt, 1)
-    obj.Tokens.Add MNew.StepToken(tkt_NumericInt, 0)
-    obj.Tokens.Add MNew.StepToken(tkt_NumericInt, 0)
-    obj.Tokens.Add MNew.StepToken(tkt_NumericInt, 0)
+    Set Obj = MNew.StepObject(1, "COLOR")
+    Obj.Tokens.Add MNew.StepToken(tkt_NumericInt, 1)
+    Obj.Tokens.Add MNew.StepToken(tkt_NumericInt, 0)
+    Obj.Tokens.Add MNew.StepToken(tkt_NumericInt, 0)
+    Obj.Tokens.Add MNew.StepToken(tkt_NumericInt, 0)
     
     Set ser = New StepSerializer
-    obj.Serialize ser
+    Obj.Serialize ser
     Text1.Text = ser.ToStr
     
 End Sub
 
 Private Sub Command2_Click()
-    Dim Str As StreamStr: Set Str = MNew.StreamStr(Text1.Text)
+    Dim str As StreamStr: Set str = MNew.StreamStr(Text1.Text)
     Dim Reader As StepReader
     
-    Set Reader = MNew.StepReader(Str)
+    Set Reader = MNew.StepReader(str)
     
-    Set obj = Reader.NextStepObject
-    obj.Serialize ser
+    Set Obj = Reader.NextStepObject
+    Obj.Serialize ser
     Text2.Text = ser.ToStr
     
 End Sub
 
 Private Sub Command3_Click()
     
-    Dim sth As StepHeader:    Set sth = MNew.StepHeader("Dateibeschreibung", "FImpl 2.1", "C:\test.ifc", "", "OlimilO1402", "MBO-Ing.com")
-    sth.FileSchema = "Icx03"
+    Dim sth As StepHeader:    Set sth = MNew.StepHeader("Dateibeschreibung", "FImpl 2.1", "C:\test.ifc", "", "OlimilO1402", "MBO-Ing.com", "Icx03")
+    
     Dim std As StepData:      Set std = New StepData
     Dim sdoc As StepDocument: Set sdoc = MNew.StepDocument(sth, std)
-    With std.Add(MNew.StepObject(0, "ICXCOLOR"))
+    
+    Dim Color As StepObject:  Set Color = MNew.StepObject(0, "ICXCOLOR")
+    With Color
+        .Tokens.Add MNew.StepToken(EStepTokenType.tkt_NumericInt, 3)
+        .Tokens.Add MNew.StepToken(EStepTokenType.tkt_NumericInt, 255)
+        .Tokens.Add MNew.StepToken(EStepTokenType.tkt_NumericInt, 0)
+        .Tokens.Add MNew.StepToken(EStepTokenType.tkt_NumericInt, 0)
+    End With
+    
+    Dim Layer As StepObject: Set Layer = MNew.StepObject(0, "ICXLAYER")
+    With Layer
         .Tokens.Add MNew.StepToken(EStepTokenType.tkt_NumericInt, 1)
-        .Tokens.Add MNew.StepToken(EStepTokenType.tkt_NumericInt, 0)
-        .Tokens.Add MNew.StepToken(EStepTokenType.tkt_NumericInt, 0)
-        .Tokens.Add MNew.StepToken(EStepTokenType.tkt_NumericInt, 0)
+        .Tokens.Add MNew.StepToken(EStepTokenType.tkt_String, "Standardlayer1")
     End With
-    With std.Add(MNew.StepObject(0, "ICXPOINT"))
+    
+    Dim LinTyp As StepObject: Set LinTyp = MNew.StepObject(0, "ICXLINETYPE")
+    With LinTyp
+        .Tokens.Add MNew.StepToken(EStepTokenType.tkt_EnumIdentifier, "SOLID")
+        .Tokens.Add MNew.StepToken(EStepTokenType.tkt_Boolean, True)
+        .Tokens.Add MNew.StepToken(EStepTokenType.tkt_EmptyOrDefault, Nothing)
+    End With
+    
+    Dim Point0 As StepObject: Set Point0 = MNew.StepObject(0, "ICXPOINT")
+    With Point0
         .Tokens.Add MNew.StepToken(EStepTokenType.tkt_NumericFlt, 0#)
         .Tokens.Add MNew.StepToken(EStepTokenType.tkt_NumericFlt, 0#)
         .Tokens.Add MNew.StepToken(EStepTokenType.tkt_NumericFlt, 0#)
     End With
-    With std.Add(MNew.StepObject(0, "ICXPOINT"))
+    
+    Dim Point1 As StepObject: Set Point1 = MNew.StepObject(0, "ICXPOINT")
+    With Point1
         .Tokens.Add MNew.StepToken(EStepTokenType.tkt_NumericFlt, 1#)
         .Tokens.Add MNew.StepToken(EStepTokenType.tkt_NumericFlt, 0#)
         .Tokens.Add MNew.StepToken(EStepTokenType.tkt_NumericFlt, 0#)
     End With
     
+    'Dim Points As StepTokens: Set Points = New StepTokens
+    Dim Points As nTupel: Set Points = MNew.nTupel(vbObject, 2)
+    Points.Add MNew.StepToken(EStepTokenType.tkt_StepObject, Point0)
+    Points.Add MNew.StepToken(EStepTokenType.tkt_StepObject, Point1)
     
+    Dim Line As StepObject: Set Line = MNew.StepObject(0, "ICXLINE")
+    With Line
+        .Tokens.Add MNew.StepToken(EStepTokenType.tkt_String, "BIMID1")
+        .Tokens.Add MNew.StepToken(EStepTokenType.tkt_StepObject, Color)
+        .Tokens.Add MNew.StepToken(EStepTokenType.tkt_StepObject, Layer)
+        .Tokens.Add MNew.StepToken(EStepTokenType.tkt_StepObject, LinTyp)
+        .Tokens.Add MNew.StepToken(EStepTokenType.tkt_nTupelList, Points)
+    End With
     
+    Line.AddToStepData std
     
     Dim ser As StepSerializer: Set ser = New StepSerializer
     sdoc.Serialize ser

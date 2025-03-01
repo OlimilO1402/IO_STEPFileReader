@@ -28,14 +28,14 @@ Private Sub Class_Initialize()
     m_TimeStamp = Now
 End Sub
 
-Friend Sub New_(FDescr As String, FImpl As String, PFNam As String, DateTimeStamp, Auth As String, Organis As String)
-    FileDescription = FDescr: FileImplLevel = FImpl: FileName = PFNam: Author = Auth: Organization = Organis
+Friend Sub New_(FDescr As String, FImpl As String, PFNam As String, DateTimeStamp, Auth As String, Organis As String, FSchema As String)
+    FileDescription = FDescr: FileImplLevel = FImpl: FileName = PFNam: Author = Auth: Organization = Organis: FileSchema = FSchema
     Dim vt As VbVarType: vt = VarType(DateTimeStamp)
     If vt = vbDate Then m_TimeStamp = DateTimeStamp Else If vt = vbString And Len(DateTimeStamp) Then TimeStampStr = DateTimeStamp
 End Sub
 ''Copy To MNew.bas
-'Public Function StepHeader(ByVal FDescr As String, ByVal FImpl As String, ByVal PFNam As String, DateTimeStamp, ByVal Auth As String, ByVal Organis As String) As StepHeader
-'    Set StepHeader = New StepHeader: StepHeader.New_ FDescr, FImpl, PFNam, DateTimeStamp, Auth, Organis
+'Public Function StepHeader(ByVal FDescr As String, ByVal FImpl As String, ByVal PFNam As String, DateTimeStamp, ByVal Auth As String, ByVal Organis As String, ByVal FSchema As String) As StepHeader
+'    Set StepHeader = New StepHeader: StepHeader.New_ FDescr, FImpl, PFNam, DateTimeStamp, Auth, Organis, FSchema
 'End Function
 
 Public Sub Serialize(Serializer As StepSerializer)

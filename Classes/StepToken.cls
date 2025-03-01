@@ -15,6 +15,7 @@ Option Explicit
 
 Public Enum EStepTokenType
     tkt_ObjectHash         ' start of line "#" NumericInt
+    tkt_StepObject         ' Token contains an object of type StepObject
     tkt_Identifier         ' Identifier contains letters (A-Z)*,(a-z)*,(0-9)*,(_),(-) must start with alphabetic letter
     tkt_NumericInt         ' ("+"|"-")?("0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9")+
     tkt_NumericFlt         ' ("+"|"-")?("0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9")*"."("0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9")+("e"("+"|"-")?("0"|"1"|"2"|"3"|"4"|"5"|"6"|"7"|"8"|"9")*

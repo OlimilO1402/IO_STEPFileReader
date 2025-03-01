@@ -20,6 +20,7 @@ Class=StreamStr; Classes\StreamStr.cls
 Class=List; ..\List_GenericNLinq\Classes\List.cls
 Class=Stack; ..\List_GenericNLinq\Classes\Stack.cls
 Class=PathFileName; ..\IO_PathFileName\Classes\PathFileName.cls
+Class=nTupel; Classes\nTupel.cls
 ResFile32="Resources\MyRes.res"
 IconForm="FMain"
 Startup="FMain"

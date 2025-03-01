@@ -20,8 +20,8 @@ Public Function StepDocument(aHeader As StepHeader, aData As StepData) As StepDo
     Set StepDocument = New StepDocument: StepDocument.New_ aHeader, aData
 End Function
 
-Public Function StepHeader(ByVal FDescr As String, ByVal FImpl As String, ByVal PFNam As String, DateTimeStamp, ByVal Auth As String, ByVal Organis As String) As StepHeader
-    Set StepHeader = New StepHeader: StepHeader.New_ FDescr, FImpl, PFNam, DateTimeStamp, Auth, Organis
+Public Function StepHeader(ByVal FDescr As String, ByVal FImpl As String, ByVal PFNam As String, DateTimeStamp, ByVal Auth As String, ByVal Organis As String, ByVal FSchema As String) As StepHeader
+    Set StepHeader = New StepHeader: StepHeader.New_ FDescr, FImpl, PFNam, DateTimeStamp, Auth, Organis, FSchema
 End Function
 
 Public Function StepObject(ByVal aHash As Long, ByVal aClassName As String) As StepObject
@@ -45,6 +45,10 @@ End Function
 
 Public Function StepTokenizer(aStream As StreamStr) As StepTokenizer
     Set StepTokenizer = New StepTokenizer: StepTokenizer.New_ aStream
+End Function
+
+Public Function nTupel(Of_Typ As VbVarType, ByVal nCount As Long) As nTupel
+    Set nTupel = New nTupel: nTupel.New_ Of_Typ, nCount
 End Function
 
 'Class-hierarchiy

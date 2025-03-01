@@ -37,3 +37,23 @@ End Property
 Public Sub Serialize(Serializer As StepSerializer)
     Serializer.SerializeStepObject Me
 End Sub
+
+Public Sub AddToStepData(Data As StepData)
+    Data.Add Me
+    'and all StepObjects in m_Tokens
+    Dim Tok As StepToken
+    Dim o As Object, Obj As StepObject
+    Dim i As Long
+    For i = 0 To m_Tokens.Count - 1
+        Set Tok = m_Tokens.Item(i)
+        If Tok.TokenType = tkt_ObjectHash Then
+            If VarType(Tok.Value) = vbObject Then
+                Set o = Tok.Value
+                If TypeOf o Is StepObject Then
+                    Set Obj = o
+                    Obj.AddToStepData Data
+                End If
+            End If
+        End If
+    Next
+End Sub
